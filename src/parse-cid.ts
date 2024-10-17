@@ -9,6 +9,7 @@
 // XXX TODO
 // - [ ] TS
 // - [ ] test
+// - [ ] check that the CJS gen works
 
 const B36_ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
 
