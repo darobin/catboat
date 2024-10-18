@@ -14,26 +14,25 @@ before(async () => {
   wtfData = await readFile(rel('fixtures/wtf.jpg'));
   wtfHash = await hash(wtfData);
 });
-// describe('CID parsing', () => {
-//   it('parses a valid CID', () => {
-//     const { version, codec, codecType, hash, hashType } = parseCID(wtf);
-//     equal(version, 1, 'version must be 1');
-//     equal(codec, CODECS.raw, 'codec must be raw');
-//     equal(codecType, 'raw-bytes', 'codec type must be raw-bytes');
-//     equal(hashType, 'blake3', 'hash type must be blake3');
-//     equal(hash, wtfHash, 'hash must be the right one');
-//   });
-//   it('refuses to parse invalid LUCIDs', () => {
-//     throws(() => parseCID('QmNprJ78ovcUuGMoMFiihK7GBpCmH578JU8hm43uxYQtBw'), /CIDv0 is not supported/, 'no v0');
-//     throws(() => parseCID('zb2rhe5P4gXftAwvA4eXQ5HJwsER2owDyS9sKaQRRVQPn93bA'), /Only base32 lowercase is supported/, 'only b32');
-//     throws(() => parseCID('bafkr4idcy33utsake8atvbagnojkn7odp7mdo6n7tvspd4ndnewphj67xu'), /Invalid character/, 'only valid characters');
-//     // throws(() => parse('babkr4ibfguvoa2fvjkj66yeufqef3ir2ginh66mfde4raiq42t7775p7wy'), /CIDv0 is not supported/, 'no v0 either');
-//     throws(() => parseCID('bajkr4ibfguvoa2fvjkj66yeufqef3ir2ginh66mfde4raiq42t7775p7wy'), /Only version 1 is supported/, 'no v2');
-//     throws(() => parseCID('baeir4ibfguvoa2fvjkj66yeufqef3ir2ginh66mfde4raiq42t7775p7wy'), /Unsupported CID codec/, 'limited codecs');
-//     throws(() => parseCID('bafkrcibfguvoa2fvjkj66yeufqef3ir2ginh66mfde4raiq42t7775p7wy'), /The only supported hash type is Blake3/, 'only blake3');
-//     throws(() => parseCID('bafkr4ejfguvoa2fvjkj66yeufqef3ir2ginh66mfde4raiq42t7775p7wy'), /Wrong size for Blake3 hash/, 'wrong blake3');
-//   });
-// });
+describe('CID parsing', () => {
+  it('parses a valid CID', () => {
+    const { version, codec, hash, hashType } = parseCID(wtf);
+    equal(version, 1, 'version must be 1');
+    equal(codec, CODECS.raw, 'codec must be raw');
+    equal(hashType, 'blake3', 'hash type must be blake3');
+    equal(hash, wtfHash, 'hash must be the right one');
+  });
+  it('refuses to parse invalid LUCIDs', () => {
+    throws(() => parseCID('QmNprJ78ovcUuGMoMFiihK7GBpCmH578JU8hm43uxYQtBw'), /CIDv0 is not supported/, 'no v0');
+    throws(() => parseCID('zb2rhe5P4gXftAwvA4eXQ5HJwsER2owDyS9sKaQRRVQPn93bA'), /Only base36 lowercase is supported/, 'only b36');
+    throws(() => parseCID('k'), /Empty CID/, 'no empty');
+    throws(() => parseCID('k4cx9is2yavhu7l74wtw7enigx8xyikvkyhnqjz8xgk5reer38v91jul'), /Only version 1 is supported/, 'no v2');
+    throws(() => parseCID('k2jn92crxvj3lh7ekv0mwv4gul75xzm141qiz5dhx9clipbs3eusi3vg'), /Unsupported CID codec/, 'limited codecs');
+    throws(() => parseCID('k2cwuedmosc65hhh0bee97q5jx3fe55tiyqzep8vgds83agps9dof3da'), /The only supported hash type is Blake3/, 'only blake3');
+    // XXX Not testing the below yet
+    // throws(() => parseCID('bafkr4ejfguvoa2fvjkj66yeufqef3ir2ginh66mfde4raiq42t7775p7wy'), /Wrong size for Blake3 hash/, 'wrong blake3');
+  });
+});
 
 // describe('CID minting', () => {
 //   it('mints a valid CID for bytes', async () => {

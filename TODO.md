@@ -2,7 +2,7 @@
 # TODO
 - [ ] parse-cid
   - [x] TS
-  - [ ] test
+  - [x] test
   - [ ] docs
 - [ ] cid``
 - [ ] make-cid
