@@ -1,15 +1,13 @@
 
-// Code heavily inspired by js-multiformats, which vendors the following:
-// base-x encoding / decoding
-// Copyright (c) 2018 base-x contributors
-// Copyright (c) 2014-2018 The Bitcoin Core developers (base58.cpp)
-// Distributed under the MIT software license, see
-// http://www.opensource.org/licenses/mit-license.php.
+import { CODECS, CIDCodec } from './codecs.js';
 
-// XXX TODO
-// - [ ] TS
-// - [ ] test
-// - [ ] check that the CJS gen works
+// Code heavily inspired by js-multiformats, which vendors the following:
+//      base-x encoding / decoding
+//      Copyright (c) 2018 base-x contributors
+//      Copyright (c) 2014-2018 The Bitcoin Core developers (base58.cpp)
+//      Distributed under the MIT software license, see
+//      http://www.opensource.org/licenses/mit-license.php.
+
 
 const B36_ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
 
@@ -23,10 +21,6 @@ for (let i = 0; i < B36_ALPHABET.length; i++) {
   BASE_MAP[B36_ALPHABET.charAt(i).charCodeAt(0)] = i;
 }
 
-const CODECS = {
-  raw: 0x55,
-  dagCBOR: 0x71,
-};
 const SUPPORTED_CODECS = new Set(Object.values(CODECS));
 
 const BLAKE3_CODE = 0x1e;
@@ -35,13 +29,13 @@ const BLAKE3_SIZE = 32;
 // Gets a CID as string or Uint8Array.
 // Returns a structure with all components.
 // Throws if we don't support it.
-export default function parse (cid) {
-  let uarr;
+export default function parse (cid: string | Uint8Array): CID {
+  let uarr: Uint8Array;
   if (typeof cid === 'string') {
-    if (cid.length === 46 && /^Qm/.test(cid)) throw new Error('CIDv0 is not supported.');
-    if (cid[0] !== 'k') throw new Error('Only base36 lowercase is supported.');
+    if (cid.length === 46 && /^Qm/.test(cid)) throw new Error('CIDv0 is not supported');
+    if (cid[0] !== 'k') throw new Error('Only base36 lowercase is supported');
     cid = cid.substring(1);
-    if (cid.length === 0) return new Uint8Array();
+    if (cid.length === 0) throw new Error('Empty CID');
     let psz = 0;
     let zeroes = 0;
     let length = 0;
@@ -75,13 +69,27 @@ export default function parse (cid) {
     uarr = cid;
   }
   // IMPORTANT: we don't process varints because for now we don't need to. See details on makeCID().
-  const version = uarr[0];
+  const version: CIDVersion = uarr[0];
   if (version !== 1) throw new Error(`Only version 1 is supported, got ${version}.`);
-  const codec = uarr[1];
+  const codec: CIDCodec = uarr[1];
   if (!SUPPORTED_CODECS.has(codec)) throw new Error(`Unsupported CID codec ${codec}`);
   const multihashBytes = uarr.slice(2);
   if (multihashBytes[0] !== BLAKE3_CODE) throw new Error(`The only supported hash type is Blake3, got "${multihashBytes[0]}".`);
   if (multihashBytes[1] !== BLAKE3_SIZE) throw new Error('Wrong size for Blake3 hash.');
   const hash = multihashBytes.slice(2).reduce((hex, byte) => hex + byte.toString(16).padStart(2, '0'), '');
-  return { version, codec, codecType: (codec === CODECS.raw) ? 'raw-bytes' : 'dag-cbor', hash, hashType: 'blake3' };
+  return { version, codec, hash, hashType: CIDHashType.blake3 };
 }
+
+enum CIDVersion {
+  v1 = 1,
+};
+enum CIDHashType {
+  blake3 = 'blake3',
+}
+
+export type CID = {
+  version: CIDVersion,
+  codec: CIDCodec,
+  hash: string,
+  hashType: CIDHashType,
+};

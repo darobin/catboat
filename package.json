@@ -22,7 +22,9 @@
   "scripts": {
     "watch": "tsc --watch",
     "build": "tsc && tsc-alias -p tsconfig.json",
-    "postbuild": "esm2cjs --in dist/esm --out dist/cjs -l error"
+    "postbuild": "esm2cjs --in dist/esm --out dist/cjs -l error",
+    "release": "npm run build && release-it",
+    "test": "mocha"
   },
   "bin": {},
   "repository": {
@@ -45,8 +47,13 @@
   },
   "devDependencies": {
     "@alcalzone/esm2cjs": "^1.1.2",
+    "@types/node": "^22.7.6",
     "eslint": "^8.26.0",
+    "mocha": "^10.7.3",
     "tsc-alias": "^1.8.10",
     "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "hash-wasm": "^4.11.0"
   }
 }
