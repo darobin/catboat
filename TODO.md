@@ -1,13 +1,16 @@
 
 # TODO
-- [ ] parse-cid
-  - [x] TS
-  - [x] test
-  - [ ] docs
+- [x] parse-cid
+- [x] hash (internals to make Blake3 hashes easily)
 - [ ] cid``
+  - [ ] TS
+  - [ ] test
+  - [ ] docs
 - [ ] make-cid
+  - [ ] TS
+  - [ ] test
+  - [ ] docs
 - [ ] dcbor42
-- [ ] hash (internals to make Blake3 hashes easily)
-  - [x] TS
-  - [x] test
+  - [ ] TS
+  - [ ] test
   - [ ] docs
