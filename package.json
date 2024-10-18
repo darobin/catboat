@@ -1,7 +1,7 @@
 {
   "name": "catboat",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Content Addressing Toolbox Of Assorted Tools",
   "author": "Robin Berjon <robin@berjon.com>",
   "license": "Apache-2.0",
